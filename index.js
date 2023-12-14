@@ -2,7 +2,7 @@ import express from "express";
 import { PORT, mongoUrl } from "./config.js";
 import cors from "cors";
 import mongoose from "mongoose";
-import Excel from "exceljs"
+// import Excel from "exceljs"
 import { Resort } from "./models/resort.js";
 
 
@@ -88,63 +88,63 @@ app.delete("/deleteResort/:id", async (req, res) => {
 
 // Import to Excel
 
-app.get("/toExcel", async (req, res) => {
-  try {
-    let data = await Resort.find({});
+// app.get("/toExcel", async (req, res) => {
+//   try {
+//     let data = await Resort.find({});
 
-    // Create a new Excel workbook
-    const workbook = new Excel.Workbook();
-    const worksheet = workbook.addWorksheet("Sheet 1");
+//     // Create a new Excel workbook
+//     const workbook = new Excel.Workbook();
+//     const worksheet = workbook.addWorksheet("Sheet 1");
 
-    // Define columns based on JSON keys
-    const columns = Object.keys(data[0]);
-    worksheet.columns = columns.map((col) => ({ header: col, key: col }));
+//     // Define columns based on JSON keys
+//     const columns = Object.keys(data[0]);
+//     worksheet.columns = columns.map((col) => ({ header: col, key: col }));
 
-    // Add data from JSON to the worksheet
-    worksheet.addRows(data);
+//     // Add data from JSON to the worksheet
+//     worksheet.addRows(data);
 
-    // Set border styles for cells
-    worksheet.eachRow((row) => {
-      row.eachCell((cell) => {
-        // Apply border to all cells
-        cell.border = {
-          top: { style: "thin" },
-          left: { style: "thin" },
-          bottom: { style: "thin" },
-          right: { style: "thin" },
-        };
-      });
-    });
+//     // Set border styles for cells
+//     worksheet.eachRow((row) => {
+//       row.eachCell((cell) => {
+//         // Apply border to all cells
+//         cell.border = {
+//           top: { style: "thin" },
+//           left: { style: "thin" },
+//           bottom: { style: "thin" },
+//           right: { style: "thin" },
+//         };
+//       });
+//     });
 
-    // Write to a file
-    workbook.xlsx
-      .writeFile("example_with_border.xlsx")
-      .then(() => {
-        console.log("Excel file created with borders");
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+//     // Write to a file
+//     workbook.xlsx
+//       .writeFile("example_with_border.xlsx")
+//       .then(() => {
+//         console.log("Excel file created with borders");
+//       })
+//       .catch((error) => {
+//         console.error("Error:", error);
+//       });
 
-    // Set response headers for file download
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.setHeader("Content-Disposition", 'attachment; filename="data.xlsx"');
+//     // Set response headers for file download
+//     res.setHeader(
+//       "Content-Type",
+//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//     );
+//     res.setHeader("Content-Disposition", 'attachment; filename="data.xlsx"');
 
-    // Write the workbook to the response
-    await workbook.xlsx.write(res);
-    res.end();
+//     // Write the workbook to the response
+//     await workbook.xlsx.write(res);
+//     res.end();
 
-    return res.status(200).json({
-      data
-    });
+//     return res.status(200).json({
+//       data
+//     });
 
-  } catch (error) {
-    res.status(500).send("Error generating Excel file");
-  }
-});
+//   } catch (error) {
+//     res.status(500).send("Error generating Excel file");
+//   }
+// });
 
 // Connect to DB
 
