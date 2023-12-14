@@ -2,8 +2,9 @@ import express from "express";
 import { PORT, mongoUrl } from "./config.js";
 import cors from "cors";
 import mongoose from "mongoose";
-import { Resort } from "./models/resort.js";
 import Excel from "exceljs"
+import { Resort } from "./models/resort.js";
+
 
 const app = express();
 
@@ -85,20 +86,22 @@ app.delete("/deleteResort/:id", async (req, res) => {
   }
 });
 
-// Convert to PDF
+// Import to Excel
 
 app.get("/toExcel", async (req, res) => {
   try {
+    let data = await Resort.find({});
+
     // Create a new Excel workbook
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet("Sheet 1");
 
     // Define columns based on JSON keys
-    const columns = Object.keys(db[0]);
+    const columns = Object.keys(data[0]);
     worksheet.columns = columns.map((col) => ({ header: col, key: col }));
 
     // Add data from JSON to the worksheet
-    worksheet.addRows(db);
+    worksheet.addRows(data);
 
     // Set border styles for cells
     worksheet.eachRow((row) => {
@@ -133,6 +136,11 @@ app.get("/toExcel", async (req, res) => {
     // Write the workbook to the response
     await workbook.xlsx.write(res);
     res.end();
+
+    return res.status(200).json({
+      data
+    });
+
   } catch (error) {
     res.status(500).send("Error generating Excel file");
   }
